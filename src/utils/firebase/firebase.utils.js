@@ -1,15 +1,25 @@
 import { initializeApp } from "firebase/app";
+
+// Firebase methods for creating and authoriztion users
+// Methods create documents for authorized users
+// and handles sign in authoriztaion
 import {
   getAuth,
-  signInWithRedirect,
   signInWithPopup,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc, // doc retrieves document instances from firestore db
+  getDoc, // getting document data (access data)
+  setDoc, // setting document data (setting data)
+} from "firebase/firestore";
 
+// Necessary config copied from firebase when
+// app is created
 const firebaseConfig = {
   apiKey: "AIzaSyDzQLYyToqhxtma2BiODElyBhWZFtHX5mE",
   authDomain: "noneko-clothing-db.firebaseapp.com",
@@ -21,34 +31,42 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 
+// Creates google authorization provider object which is used in this app for 'sign in with google'
 const googleProvider = new GoogleAuthProvider();
 
+// Another firebase config for the google popup to sign in with google
 googleProvider.setCustomParameters({
   prompt: "select_account",
 });
 
-export const auth = getAuth();
+export const auth = getAuth(); // singelton used to help track authentication states throughout app
+
+// This function creates a user from 'sign in with google'
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
-export const signInWithGoogleRedirect = () =>
-  signInWithRedirect(auth, googleProvider);
 
-export const db = getFirestore();
+export const db = getFirestore(); // Directly points to firestore db
 
+// This function is used to create an authorized user in firebase db
 export const createUserDocumentFromAuth = async (
   userAuth,
   additionalInformation = {}
 ) => {
   if (!userAuth) return;
+  // Check for existing document reference doc takes 3 args | database instance | collection | uid
+  // userDocRef points to a unique point id in database. It does not create the document or data
   const userDocRef = doc(db, "users", userAuth.uid);
-
+  // Get data from specific user with uid
   const userSnapshot = await getDoc(userDocRef);
 
+  // if user data does not exist
+  // create / set document with data from userAuth into collection
   if (!userSnapshot.exists()) {
     const { displayName, email } = userAuth;
     const createdAt = new Date();
 
     try {
+      // set userDoc with object keys pulled off from userAuth and a time stamp when document was created
       await setDoc(userDocRef, {
         displayName,
         email,
@@ -59,16 +77,21 @@ export const createUserDocumentFromAuth = async (
       console.log("error creating user", error.message);
     }
   }
-
+  // if user data exists
+  // return userDocRef
   return userDocRef;
 };
 
+// Create user document for users that sign up with email and password
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  // stop this function from running if email and password aren't present
   if (!email || !password) return;
 
+  // firebase method to create authorized user in firestore db
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 
+// Check if user sign in is authorized and is in the firestore db
 export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
 

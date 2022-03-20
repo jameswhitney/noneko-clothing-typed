@@ -10,19 +10,24 @@ import {
 
 import "./sign-in-form.styles.scss";
 
+// default object for initial state
 const defaultFormFields = {
   email: "",
   password: "",
 };
 
 const SignInForm = () => {
+  // state initialized using defaultFormFields
   const [formFields, setFormFields] = useState(defaultFormFields);
+  // destructure email and password from state of formFields
   const { email, password } = formFields;
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
 
+  // function authorizes user with 'google sign in'
+  // and creates user doc in firestore
   const signInWithGoogle = async () => {
     const { user } = await signInWithGooglePopup();
     await createUserDocumentFromAuth(user);
@@ -32,6 +37,8 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
+      // get response from firebase for user sign in
+      // just log response for now for testing
       const response = await signInAuthUserWithEmailAndPassword(
         email,
         password
@@ -52,6 +59,8 @@ const SignInForm = () => {
     }
   };
 
+  // setFormFields based on name and value user input
+  // to setFormFields state
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });

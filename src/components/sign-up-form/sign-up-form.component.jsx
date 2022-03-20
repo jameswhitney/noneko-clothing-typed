@@ -9,6 +9,7 @@ import {
 
 import "./sign-up-form.styles.scss";
 
+// default object for initial state
 const defaultFormFields = {
   displayName: "",
   email: "",
@@ -49,6 +50,8 @@ const SignUpForm = () => {
     }
   };
 
+  // setFormFields based on name and value user input
+  // to setFormFields state
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
