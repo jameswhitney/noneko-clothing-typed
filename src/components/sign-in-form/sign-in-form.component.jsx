@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.comopnent";
+
+import { UserContext } from "../../contexts/user.context";
+
 import {
   signInWithGooglePopup,
   createUserDocumentFromAuth,
@@ -22,6 +25,8 @@ const SignInForm = () => {
   // destructure email and password from state of formFields
   const { email, password } = formFields;
 
+  const { setCurrentUser } = useContext(UserContext);
+
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
   };
@@ -37,13 +42,12 @@ const SignInForm = () => {
     event.preventDefault();
 
     try {
-      // get response from firebase for user sign in
-      // just log response for now for testing
-      const response = await signInAuthUserWithEmailAndPassword(
+      const { user } = await signInAuthUserWithEmailAndPassword(
         email,
         password
       );
-      console.log(response);
+      // Use setter function to update currentUser value in user context
+      setCurrentUser(user);
       resetFormFields();
     } catch (error) {
       switch (error.code) {
