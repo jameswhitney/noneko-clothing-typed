@@ -18,8 +18,10 @@ export const UserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const value = { currentUser, setCurrentUser };
 
-  // Listen to changes in auth status, create a user doc if none exist
-  // unsubscribe if user logs out
+  // Listen to changes in auth status, create a user doc if none exist.
+  // Subscribe or unsubscribe based on user auth.
+  // If user is no longer authenticated onAuthStateChangedListener
+  // closes it's session / unsubscribes
   useEffect(() => {
     const unsubscribe = onAuthStateChangedListener((user) => {
       if (user) {

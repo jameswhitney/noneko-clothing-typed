@@ -100,7 +100,10 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
 
+// Signs user out and updates nav component to allow a user to sign in
 export const signOutUser = async () => await signOut(auth);
 
+// Observerable Listner to keep track of user auth and consolodate as much auth
+// logic in user context
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);

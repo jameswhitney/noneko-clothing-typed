@@ -29,7 +29,7 @@ const Navigation = () => {
           </Link>
           {currentUser ? (
             <span className="nav-link" onClick={signOutUser}>
-              Sign Out
+              SIGN OUT
             </span>
           ) : (
             <Link className="nav-link" to="/auth">
