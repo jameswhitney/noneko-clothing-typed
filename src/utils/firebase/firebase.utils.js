@@ -18,6 +18,10 @@ import {
   doc, // doc retrieves document instances from firestore db
   getDoc, // getting document data (access data)
   setDoc, // setting document data (setting data)
+  collection, // Returns a collection reference
+  writeBatch,
+  query,
+  getDocs,
 } from "firebase/firestore";
 
 // Necessary config copied from firebase when
@@ -48,6 +52,36 @@ export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 
 export const db = getFirestore(); // Directly points to firestore db
+
+// Write shop-data to firestore db
+export const addCollectionAndDocuments = async (
+  collectionKey,
+  objectsToAdd
+) => {
+  const collectionRef = collection(db, collectionKey);
+  const batch = writeBatch(db);
+
+  objectsToAdd.forEach((object) => {
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+    batch.set(docRef, object);
+  });
+
+  await batch.commit();
+  console.log("done");
+};
+
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, "categories");
+  const q = query(collectionRef);
+
+  const querySnapShot = await getDocs(q);
+  const categoryMap = querySnapShot.docs.reduce((acc, docSnapShot) => {
+    const { title, items } = docSnapShot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {});
+  return categoryMap;
+};
 
 // This function is used to create an authorized user in firebase db
 export const createUserDocumentFromAuth = async (
