@@ -8,11 +8,7 @@ import {
   signInAuthUserWithEmailAndPassword,
 } from "../../utils/firebase/firebase.utils";
 
-import {
-  SignUpContainer,
-  SignUpHeader,
-  ButtonsContainer,
-} from "./sign-in-form.styles.jsx";
+import { SignUpContainer, ButtonsContainer } from "./sign-in-form.styles.jsx";
 
 // default object for initial state
 const defaultFormFields = {
