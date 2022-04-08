@@ -19,7 +19,7 @@ const getButton = (buttonType = BUTTON_TYPE_CLASSES.base) =>
     [BUTTON_TYPE_CLASSES.inverted]: InvertedButton,
   }[buttonType]);
 
-// re-usable button with different conditions based on buttonType props for styling
+// re-usable button with will render different button styles from various components based on props
 const Button = ({ children, buttonType, ...otherProps }) => {
   const CustomButton = getButton(buttonType);
   return <CustomButton {...otherProps}>{children}</CustomButton>;
