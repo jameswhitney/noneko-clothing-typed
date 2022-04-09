@@ -122,7 +122,6 @@ export const CartProvider = ({ children }) => {
   };
 
   const setIsCartOpen = (bool) => {
-    console.log(bool);
     dispatch(createAction(CART_ITEM_TYPES.SET_IS_CART_OPEN, bool));
   };
 
