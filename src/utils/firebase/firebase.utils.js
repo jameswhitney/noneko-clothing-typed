@@ -132,7 +132,7 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 // Signs user out and updates nav component to allow a user to sign in
 export const signOutUser = async () => await signOut(auth);
 
-// Observerable Listner to keep track of user auth and consolodate as much auth
-// logic in user context
+// Observerable Listner to keep track of user auth and consolodate auth
+// logic in using Redux within App component
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
