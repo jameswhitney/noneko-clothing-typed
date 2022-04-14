@@ -110,7 +110,7 @@ export const createUserDocumentFromAuth = async (
   }
   // if user data exists
   // return userDocRef
-  return userDocRef;
+  return userSnapshot;
 };
 
 // Create user document for users that sign up with email and password
@@ -136,3 +136,16 @@ export const signOutUser = async () => await signOut(auth);
 // logic in using Redux within App component
 export const onAuthStateChangedListener = (callback) =>
   onAuthStateChanged(auth, callback);
+
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (userAuth) => {
+        unsubscribe();
+        resolve(userAuth);
+      },
+      reject
+    );
+  });
+};
