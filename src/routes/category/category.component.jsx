@@ -11,7 +11,7 @@ import {
   selectCategoriesIsLoading,
 } from "../../store/category/category.selector";
 
-import { CategoryTitle, CategoryContainer } from "./category.styles.jsx";
+import { CategoryTitle, CategoryContainer } from "./category.styles";
 
 const Category = () => {
   const { category } = useParams();

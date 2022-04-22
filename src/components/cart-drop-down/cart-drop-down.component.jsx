@@ -13,7 +13,7 @@ import {
   CartDropDownContainer,
   EmptyMessage,
   CartItems,
-} from "./cart-drop-down.styles.jsx";
+} from "./cart-drop-down.styles";
 
 const CartDropDown = () => {
   const dispatch = useDispatch();

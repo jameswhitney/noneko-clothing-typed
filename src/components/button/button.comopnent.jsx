@@ -3,7 +3,7 @@ import {
   GoogleSignInButton,
   InvertedButton,
   ButtonSpinner,
-} from "./button.styles.jsx";
+} from "./button.styles";
 
 // object used to render specific styling based on
 // button type props

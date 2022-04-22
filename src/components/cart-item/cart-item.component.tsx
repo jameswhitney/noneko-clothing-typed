@@ -1,10 +1,15 @@
-import {
-  CartItemContainer,
-  ItemDetails,
-  BaseSpan,
-} from "./cart-item.styles.jsx";
+import { CartItemContainer, ItemDetails, BaseSpan } from "./cart-item.styles";
 
-const CartItem = ({ cartItem }) => {
+type cartItemProps = {
+  cartItem: {
+    name: string;
+    imageUrl: string;
+    price: number;
+    quantity: number;
+  }
+}
+
+const CartItem = ({ cartItem }: cartItemProps) => {
   const { name, imageUrl, price, quantity } = cartItem;
   return (
     <CartItemContainer>

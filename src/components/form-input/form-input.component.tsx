@@ -1,8 +1,19 @@
-import { FormInputLabel, Input, Group } from "./form-input.styles.jsx";
+import { ChangeEvent } from "react";
+
+import { FormInputLabel, Input, Group } from "./form-input.styles";
 
 // re-usable form component for any component which uses
 // forms for submission of data
-const FormInput = ({ label, ...otherProps }) => {
+
+type FormInputProps = {
+  label: string;
+  type: string;
+  name: string;
+  value: [string];
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void
+}
+
+const FormInput = ({ label, ...otherProps }: FormInputProps) => {
   return (
     <Group>
       <Input {...otherProps} />

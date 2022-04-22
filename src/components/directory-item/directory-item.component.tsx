@@ -4,9 +4,17 @@ import {
   BackgroundImage,
   Body,
   DirectoryItemContainer,
-} from "./directory-item.styles.jsx";
+} from "./directory-item.styles";
 
-const DirectoryItem = ({ category }) => {
+type DirectoryItemProps = {
+  category: {
+    imageUrl: string;
+    title: string;
+    route: string;
+  };
+}
+
+const DirectoryItem = ({ category }: DirectoryItemProps) => {
   const { imageUrl, title, route } = category;
   const navigate = useNavigate();
 
