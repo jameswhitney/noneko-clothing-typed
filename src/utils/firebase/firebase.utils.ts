@@ -11,6 +11,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  User,
+  NextOrObserver
 } from "firebase/auth";
 
 import {
@@ -22,7 +24,10 @@ import {
   writeBatch,
   query,
   getDocs,
+  QueryDocumentSnapshot
 } from "firebase/firestore";
+
+import { Category } from "../../store/category/category.types";
 
 // Necessary config copied from firebase when
 // app is created
@@ -53,11 +58,15 @@ export const signInWithGooglePopup = () =>
 
 export const db = getFirestore(); // Directly points to firestore db
 
+export type ObjectToAdd = {
+  title: string;
+}
+
 // Write shop-data to firestore db
-export const addCollectionAndDocuments = async (
-  collectionKey,
-  objectsToAdd
-) => {
+export const addCollectionAndDocuments = async <T extends ObjectToAdd>(
+  collectionKey: string,
+  objectsToAdd: T[]
+): Promise<void> => {
   const collectionRef = collection(db, collectionKey);
   const batch = writeBatch(db);
 
@@ -70,19 +79,29 @@ export const addCollectionAndDocuments = async (
   console.log("done");
 };
 
-export const getCategoriesAndDocuments = async () => {
+export const getCategoriesAndDocuments = async (): Promise<Category[]> => {
   const collectionRef = collection(db, "categories");
   const q = query(collectionRef);
 
   const querySnapShot = await getDocs(q);
-  return querySnapShot.docs.map((docSnapshot) => docSnapshot.data());
+  return querySnapShot.docs.map((docSnapshot) => docSnapshot.data() as Category);
 };
+
+export type AdditionalInformation = {
+  displayName?: string;
+}
+
+export type UserData = {
+  createdAt: Date;
+  displayName: string;
+  email: string;
+}
 
 // This function is used to create an authorized user in firebase db
 export const createUserDocumentFromAuth = async (
-  userAuth,
-  additionalInformation = {}
-) => {
+  userAuth: User,
+  additionalInformation = {} as AdditionalInformation
+): Promise<void | QueryDocumentSnapshot<UserData>> => {
   if (!userAuth) return;
   // Check for existing document reference doc takes 3 args | database instance | collection | uid
   // userDocRef points to a unique point id in database. It does not create the document or data
@@ -105,16 +124,16 @@ export const createUserDocumentFromAuth = async (
         ...additionalInformation,
       });
     } catch (error) {
-      console.log("error creating user", error.message);
+      console.log("error creating user", error);
     }
   }
   // if user data exists
   // return userDocRef
-  return userSnapshot;
+  return userSnapshot as QueryDocumentSnapshot<UserData>;
 };
 
 // Create user document for users that sign up with email and password
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
+export const createAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   // stop this function from running if email and password aren't present
   if (!email || !password) return;
 
@@ -123,7 +142,7 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
 };
 
 // Check if user sign in is authorized and is in the firestore db
-export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+export const signInAuthUserWithEmailAndPassword = async (email: string, password: string) => {
   if (!email || !password) return;
 
   return await signInWithEmailAndPassword(auth, email, password);
@@ -134,10 +153,10 @@ export const signOutUser = async () => await signOut(auth);
 
 // Observerable Listner to keep track of user auth and consolodate auth
 // logic in using Redux within App component
-export const onAuthStateChangedListener = (callback) =>
+export const onAuthStateChangedListener = (callback: NextOrObserver<User>) =>
   onAuthStateChanged(auth, callback);
 
-export const getCurrentUser = () => {
+export const getCurrentUser = (): Promise<User | null> => {
   return new Promise((resolve, reject) => {
     const unsubscribe = onAuthStateChanged(
       auth,
